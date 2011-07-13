@@ -28,8 +28,10 @@ import hudson.model.Hudson;
 import jenkins.plugins.slideshow.PluginImpl;
 import jenkins.plugins.slideshow.SlideShows;
 import net.sf.json.JSONObject;
+import org.jfree.data.time.Millisecond;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
+import org.kohsuke.stapler.bind.JavaScriptMethod;
 
 import javax.management.Descriptor;
 import javax.servlet.ServletException;
@@ -38,6 +40,7 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created: 7/10/11 5:29 PM
@@ -125,16 +128,27 @@ public class SlideShow implements Serializable {
         } else if (currentIndex < 0 || currentIndex >= pages.size() - 1) {
             return 0;
         } else {
-            return currentIndex++;
+            return currentIndex + 1;
         }
     }
 
-    public Page getNextPage(int currentIndex) {
+    @JavaScriptMethod
+    public PagePojo getNextPage(int currentIndex) {
         int nextIndex = getNextIndex(currentIndex);
         if (nextIndex < 0) {
             return null;
         }
-        return pages.get(nextIndex);
+        Page page = pages.get(nextIndex);
+        return new PagePojo(page.getFullDisplayUrl(), nextIndex, page.getSpecifiedTime());
+    }
+
+    @JavaScriptMethod
+    public PagePojo getFirstPage() {
+        if(pages == null || pages.isEmpty()) {
+            return null;
+        }
+        Page page = pages.get(0);
+        return new PagePojo(page.getFullDisplayUrl(), 0, page.getSpecifiedTime());
     }
 
     public SlideShows getTheMainPage() {
@@ -160,5 +174,36 @@ public class SlideShow implements Serializable {
 
     public String getViewUrl() {
         return SlideShows.getInstance().getFullUrl() + "/show/"  + getName();
+    }
+
+    public static class PagePojo implements Serializable {
+        private String url;
+        private int index;
+        private int timeout;
+
+        public PagePojo(String url, int index, int timeout) {
+            this.url = url;
+            this.index = index;
+            this.timeout = timeout;
+        }
+
+        public PagePojo() {
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public int getIndex() {
+            return index;
+        }
+
+        public int getTimeout() {
+            return timeout;
+        }
+
+        public int getTimeoutMs() {
+            return (int) TimeUnit.SECONDS.toMillis(timeout);
+        }
     }
 }
