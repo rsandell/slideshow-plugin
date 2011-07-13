@@ -1,0 +1,64 @@
+<!--
+  ~ The MIT License
+  ~
+  ~ Copyright 2011 Robert Sandell - sandell.robert@gmail.com. All rights reserved.
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in
+  ~ all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  ~ THE SOFTWARE.
+  -->
+
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
+         xmlns:t="/lib/hudson" xmlns:f="/lib/form" escapeText="true">
+
+    <tr>
+        <th colspan="2" style="font-size: 16;">${it.name}</th>
+        <th align="right">
+            <a href="${it.viewUrl}" title="${%View}">
+                <img src="${rootUrl}/images/16x16/clock.png" border="0" alt="${%View}"/>
+            </a>
+            <a href="${it.configUrl}" title="${%Configure}">
+                <img src="${rootUrl}/images/16x16/document_edit.png" border="0" alt="${%Configure}"/>
+            </a>
+            <img src="${rootUrl}/images/16x16/edit-delete.png" border="0" alt="Delete"/>
+        </th>
+    </tr>
+    <tr>
+        <th style="font-size: 9; white-space: nowrap" width="60" nowrap="true">${%Default Page Time}</th>
+        <td style="font-size: 9;" colspan="2" align="left">${it.defaultPageTime}</td>
+    </tr>
+    <tr class="disablehover">
+        <td colspan="3">
+            <j:forEach items="${it.pages}" var="page" indexVar="pageCount">
+                <div style="float: left; width: 240px; height: 240px; margin: 4px;">
+                    <table class="pane bigtable" style="width: 100%; height: 100%">
+                        <tr>
+                            <th colspan="2" style="font-size: 10px; height: 16px;">${pageCount}</th>
+                        </tr>
+                        <st:include it="${page}" page="view.jelly"/>
+                    </table>
+                </div>
+            </j:forEach>
+        </td>
+    </tr>
+    <tr class="disablehover" style="border-left: none; border-right: none;">
+        <td colspan="3" style="border-left: none; border-right: none;">
+            <st:nbsp/>
+        </td>
+    </tr>
+
+</j:jelly>

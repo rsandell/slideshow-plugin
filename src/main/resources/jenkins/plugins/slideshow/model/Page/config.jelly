@@ -26,9 +26,9 @@
     <f:section title="${General}">
         <f:optionalBlock field="overrideTime" name="overrideTime"
                          title="${%Override slide show time}"
-                         checked="${it.isOverrideTime()}">
+                         checked="${instance.getOverrideTime() != null}">
             <f:entry field="time" title="${%Time}" description="${%The time to display the page in seconds.}">
-                <f:textbox value="${it.overrideTime.time}"/>
+                <f:textbox value="${instance.overrideTime.time}" default="${descriptor.getDefaultPageTime()}"/>
             </f:entry>
         </f:optionalBlock>
     </f:section>

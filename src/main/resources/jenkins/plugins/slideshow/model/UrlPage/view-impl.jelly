@@ -21,23 +21,16 @@
   ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   ~ THE SOFTWARE.
   -->
+
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
          xmlns:t="/lib/hudson" xmlns:f="/lib/form" escapeText="true">
-    <l:layout title="${%Slide Shows}" norefresh="true">
-        <l:header>
-            <style type="text/css">
-                tr.disablehover:hover {
-                background-color: white;
-                }
-            </style>
-        </l:header>
-        <st:include it="${it}" page="side-panel.jelly"/>
-        <l:main-panel>
-            <table width="100%" class="pane bigtable">
-                <j:forEach items="${it.shows}" var="show">
-                    <st:include it="${show}" page="view.jelly"/>
-                </j:forEach>
-            </table>
-        </l:main-panel>
-    </l:layout>
+    <tr style="height: 16px;">
+        <th align="left">${%Url}</th>
+        <td>${it.url}</td>
+    </tr>
+    <tr class="disablehover">
+        <td colspan="2">
+            <st:nbsp/>
+        </td>
+    </tr>
 </j:jelly>

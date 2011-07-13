@@ -30,7 +30,6 @@ import hudson.model.Hudson;
 import hudson.util.FormValidation;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
-import org.kohsuke.stapler.Stapler;
 
 import java.util.Iterator;
 
@@ -63,6 +62,14 @@ public abstract class Page implements Describable<Page> {
         this.overrideTime = overrideTime;
     }
 
+    public int getSpecifiedTime() {
+        if (this.overrideTime != null) {
+            return overrideTime.getTime();
+        } else {
+            return getParent().getDefaultPageTime();
+        }
+    }
+
     public abstract String getFullDisplayUrl();
 
     public SlideShow getParent() {
@@ -83,6 +90,10 @@ public abstract class Page implements Describable<Page> {
 
         public static Iterator<Descriptor<Page>> getAllPageDescriptors() {
             return Hudson.getInstance().getDescriptorList(Page.class).iterator();
+        }
+
+        public static int getDefaultPageTime() {
+            return SlideShow.DEFAULT_PAGE_TIME;
         }
     }
 

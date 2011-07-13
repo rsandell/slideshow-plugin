@@ -150,4 +150,12 @@ public class SlideShow implements Serializable {
         PluginImpl.getInstance().save();
         response.sendRedirect2(SlideShows.getInstance().getFullUrl());
     }
+
+    public String getConfigUrl() {
+        return SlideShows.getInstance().getFullUrl() + "/show/"  + getName() + "/configure";
+    }
+
+    public String getViewUrl() {
+        return SlideShows.getInstance().getFullUrl() + "/show/"  + getName();
+    }
 }
