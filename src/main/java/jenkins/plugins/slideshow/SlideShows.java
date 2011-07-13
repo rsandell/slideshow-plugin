@@ -41,6 +41,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
+ * The main "page" for handling {@link SlideShow}s.
  * Created: 7/10/11 5:57 PM
  *
  * @author Robert Sandell &lt;sandell.robert@gmail.com&gt;
@@ -48,6 +49,11 @@ import java.util.List;
 @Extension
 public class SlideShows implements RootAction {
 
+    /**
+     * The URL-name to this RootAction.
+     *
+     * @see #getUrlName()
+     */
     public static final String URL_NAME = "slideShows";
 
 
@@ -75,10 +81,22 @@ public class SlideShows implements RootAction {
         return URL_NAME;
     }
 
+    /**
+     * All the SlideShows in the system.
+     *
+     * @return the list of SlideShows
+     */
     public List<SlideShow> getShows() {
         return PluginImpl.getInstance().getShows();
     }
 
+    /**
+     * Gives the SlideShow with the given name, or null if there is none by that name.
+     * Used to navigate the SlideShows with stapler.
+     *
+     * @param name the name to search, case insensitive.
+     * @return the SlideShow.
+     */
     public SlideShow getShow(String name) {
         for (SlideShow show : getShows()) {
             if (name.equalsIgnoreCase(show.getName())) {
@@ -88,16 +106,28 @@ public class SlideShows implements RootAction {
         return null;
     }
 
+    /**
+     * The singleton instance of this Action.
+     *
+     * @return the object.
+     */
     public static SlideShows getInstance() {
         List<Action> actions = Hudson.getInstance().getActions();
         for (Action a : actions) {
             if (a instanceof SlideShows) {
-                return (SlideShows) a;
+                return (SlideShows)a;
             }
         }
         return null;
     }
 
+    /**
+     * For validation for the name of a new SlideShow.
+     * It checks that it is non empty and unique (no other SlideShow with the same name).
+     *
+     * @param value the value to check.
+     * @return {@link hudson.util.FormValidation#ok()} if so.
+     */
     public FormValidation doCheckName(@QueryParameter String value) {
         if (value == null || value.isEmpty()) {
             return FormValidation.error("Please specify a name.");
@@ -107,10 +137,25 @@ public class SlideShows implements RootAction {
         return FormValidation.ok();
     }
 
+    /**
+     * Form validation for the default page time.
+     * It checks that the user set a non negative integer.
+     *
+     * @param value the value to check.
+     * @return {@link hudson.util.FormValidation#ok()} if so.
+     */
     public FormValidation doCheckDefaultPageTime(@QueryParameter String value) {
         return FormValidation.validateNonNegativeInteger(value);
     }
 
+    /**
+     * Form post method for creating a new SlideShow.
+     *
+     * @param request  the request
+     * @param response the response
+     * @throws ServletException if so.
+     * @throws IOException      if so.
+     */
     public void doCreateNew(StaplerRequest request, StaplerResponse response) throws ServletException, IOException {
 
         Hudson.getInstance().checkPermission(getCreatePermission());
@@ -124,26 +169,60 @@ public class SlideShows implements RootAction {
         response.sendRedirect2("show/" + show.getName() + "/configure");
     }
 
+    /**
+     * Convenience method for easier Jelly access to the constant {@link SlideShow#DEFAULT_PAGE_TIME}.
+     *
+     * @return the default page display time.
+     */
     public int getDefaultPageTime() {
         return SlideShow.DEFAULT_PAGE_TIME;
     }
 
+    /**
+     * The URL to this Action including the context root.
+     *
+     * @return the URL
+     */
     public String getFullUrl() {
         return PluginImpl.getFromRootUrl(getUrlName());
     }
 
+    /**
+     * The LIST permission for easier Jelly access to the constant.
+     *
+     * @return the LIST permission.
+     * @see PluginImpl#LIST
+     */
     public Permission getListPermission() {
         return PluginImpl.LIST;
     }
 
+    /**
+     * The CREATE permission for easier Jelly access to the constant.
+     *
+     * @return the CREATE permission.
+     * @see PluginImpl#CREATE
+     */
     public Permission getCreatePermission() {
         return PluginImpl.CREATE;
     }
 
+    /**
+     * The CONFIGURE permission for easier Jelly access to the constant.
+     *
+     * @return the CONFIGURE permission.
+     * @see PluginImpl#CONFIGURE
+     */
     public Permission getConfigurePermission() {
         return PluginImpl.CONFIGURE;
     }
 
+    /**
+     * The DELETE permission for easier Jelly access to the constant.
+     *
+     * @return the DELETE permission.
+     * @see PluginImpl#DELETE
+     */
     public Permission getDeletePermission() {
         return PluginImpl.DELETE;
     }

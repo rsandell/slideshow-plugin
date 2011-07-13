@@ -29,7 +29,6 @@ import hudson.Plugin;
 import hudson.model.Hudson;
 import hudson.security.Permission;
 import hudson.security.PermissionGroup;
-import jenkins.plugins.slideshow.model.Page;
 import jenkins.plugins.slideshow.model.SlideShow;
 import org.kohsuke.stapler.Stapler;
 
@@ -40,7 +39,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Main Plugin Singleton
+ * Main Plugin Singleton.
  * Created: 7/10/11 5:13 PM
  *
  * @author Robert Sandell &lt;sandell.robert@gmail.com&gt;
@@ -48,12 +47,47 @@ import java.util.List;
 @Extension
 public class PluginImpl extends Plugin {
 
-    public static final PermissionGroup SLIDESHOWS_PERMISSIONS = new PermissionGroup(PluginImpl.class, Messages._SlideShows());
+    /**
+     * Permission group for SlideShow related activities.
+     */
+    public static final PermissionGroup SLIDESHOWS_PERMISSIONS =
+            new PermissionGroup(PluginImpl.class, Messages._SlideShows());
 
-    public static final Permission LIST = new Permission(PluginImpl.SLIDESHOWS_PERMISSIONS, "List", Messages._ListSlideShows(), Hudson.ADMINISTER);
-    public static final Permission DELETE = new Permission(PluginImpl.SLIDESHOWS_PERMISSIONS, "Delete", Messages._DeleteSlideShows(), Hudson.ADMINISTER);
-    public static final Permission CREATE = new Permission(PluginImpl.SLIDESHOWS_PERMISSIONS, "Create", Messages._CreateSlideShows(), Hudson.ADMINISTER);
-    public static final Permission CONFIGURE = new Permission(PluginImpl.SLIDESHOWS_PERMISSIONS, "Configure", Messages._ConfigureSlideShows(), CREATE);
+    /**
+     * The permission to list the SlideShows in the system.
+     */
+    public static final Permission LIST = new Permission(
+            PluginImpl.SLIDESHOWS_PERMISSIONS,
+            "List",
+            Messages._ListSlideShows(),
+            Hudson.ADMINISTER);
+
+    /**
+     * The permission to delete a SlideShow.
+     */
+    public static final Permission DELETE = new Permission(
+            PluginImpl.SLIDESHOWS_PERMISSIONS,
+            "Delete",
+            Messages._DeleteSlideShows(),
+            Hudson.ADMINISTER);
+    /**
+     * The permission to create a new SlideShow.
+     * This also implies the CONFIGURE permission.
+     */
+    public static final Permission CREATE = new Permission(
+            PluginImpl.SLIDESHOWS_PERMISSIONS,
+            "Create",
+            Messages._CreateSlideShows(),
+            Hudson.ADMINISTER);
+
+    /**
+     * The permission to configure an existing SlideShow.
+     */
+    public static final Permission CONFIGURE = new Permission(
+            PluginImpl.SLIDESHOWS_PERMISSIONS,
+            "Configure",
+            Messages._ConfigureSlideShows(),
+            CREATE);
 
     private List<SlideShow> shows;
 
@@ -63,30 +97,63 @@ public class PluginImpl extends Plugin {
         load();
     }
 
+    /**
+     * Gets the singleton instance of this Plugin.
+     *
+     * @return the instance.
+     */
     public static PluginImpl getInstance() {
         return Hudson.getInstance().getPlugin(PluginImpl.class);
     }
 
+    /**
+     * Made the method synchronized.
+     *
+     * @throws IOException if so.
+     * @see hudson.Plugin#save()
+     */
     @Override
     public synchronized void save() throws IOException {
         super.save();
     }
 
-    public List<SlideShow> getShows() {
-        if(shows == null) {
+    /**
+     * Gets a reference to the list of SlideShows.
+     *
+     * @return the list.
+     */
+    public synchronized List<SlideShow> getShows() {
+        if (shows == null) {
             shows = new LinkedList<SlideShow>();
         }
         return shows;
     }
 
-    public void setShows(List<SlideShow> shows) {
+    /**
+     * Sets the list of SlideShows.
+     *
+     * @param shows the shows to add.
+     */
+    public synchronized void setShows(List<SlideShow> shows) {
         this.shows = shows;
     }
 
-    public void addShow(SlideShow show) {
+    /**
+     * Adds a SlideShow to the list.
+     *
+     * @param show the slide show to add.
+     */
+    public synchronized void addShow(SlideShow show) {
         getShows().add(show);
     }
 
+    /**
+     * Finds the rootUrl by first using {@link hudson.model.Hudson#getRootUrl()}
+     * if it isn't found there it tries to get it from the current
+     * {@link org.kohsuke.stapler.StaplerRequest#getRootPath()}.
+     *
+     * @return the context root.
+     */
     public static String getRootUrl() {
         String rootUrl = Hudson.getInstance().getRootUrl();
         if (rootUrl == null) {
@@ -98,6 +165,12 @@ public class PluginImpl extends Plugin {
         return rootUrl;
     }
 
+    /**
+     * Prefixes the given URL with the rootUrl if it can be found.
+     *
+     * @param url the URL to prefix.
+     * @return the url with the context root included.
+     */
     public static String getFromRootUrl(String url) {
         try {
             URI u = new URI(url);
