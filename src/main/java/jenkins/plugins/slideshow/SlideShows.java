@@ -28,6 +28,7 @@ import hudson.Extension;
 import hudson.model.Action;
 import hudson.model.Hudson;
 import hudson.model.RootAction;
+import hudson.security.Permission;
 import hudson.util.FormValidation;
 import jenkins.plugins.slideshow.model.SlideShow;
 import net.sf.json.JSONObject;
@@ -37,7 +38,6 @@ import org.kohsuke.stapler.StaplerResponse;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -53,12 +53,21 @@ public class SlideShows implements RootAction {
 
     @Override
     public String getIconFileName() {
-        return "clock.gf";
+        if (!Hudson.getInstance().hasPermission(getListPermission())) {
+            return null;
+        } else {
+            return "clock.png";
+        }
+
     }
 
     @Override
     public String getDisplayName() {
-        return Messages.SlideShows();
+        if (!Hudson.getInstance().hasPermission(getListPermission())) {
+            return null;
+        } else {
+            return Messages.SlideShows();
+        }
     }
 
     @Override
@@ -103,6 +112,9 @@ public class SlideShows implements RootAction {
     }
 
     public void doCreateNew(StaplerRequest request, StaplerResponse response) throws ServletException, IOException {
+
+        Hudson.getInstance().checkPermission(getCreatePermission());
+
         JSONObject json = request.getSubmittedForm();
         String name = json.getString("name");
         int time = json.getInt("defaultPageTime");
@@ -118,5 +130,21 @@ public class SlideShows implements RootAction {
 
     public String getFullUrl() {
         return PluginImpl.getFromRootUrl(getUrlName());
+    }
+
+    public Permission getListPermission() {
+        return PluginImpl.LIST;
+    }
+
+    public Permission getCreatePermission() {
+        return PluginImpl.CREATE;
+    }
+
+    public Permission getConfigurePermission() {
+        return PluginImpl.CONFIGURE;
+    }
+
+    public Permission getDeletePermission() {
+        return PluginImpl.DELETE;
     }
 }

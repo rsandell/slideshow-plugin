@@ -24,6 +24,7 @@
 
 package jenkins.plugins.slideshow.model;
 
+import hudson.model.Hudson;
 import jenkins.plugins.slideshow.PluginImpl;
 import jenkins.plugins.slideshow.SlideShows;
 import net.sf.json.JSONObject;
@@ -145,7 +146,9 @@ public class SlideShow implements Serializable {
     }
 
     public void doConfigSubmit(StaplerRequest request, StaplerResponse response) throws ServletException, IOException {
-        //JSONObject form = request.getSubmittedForm();
+
+        Hudson.getInstance().checkPermission(PluginImpl.CONFIGURE);
+
         request.bindJSON(this, request.getSubmittedForm());
         PluginImpl.getInstance().save();
         response.sendRedirect2(SlideShows.getInstance().getFullUrl());

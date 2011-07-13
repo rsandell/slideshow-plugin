@@ -23,7 +23,7 @@
   -->
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
          xmlns:t="/lib/hudson" xmlns:f="/lib/form" escapeText="true">
-    <l:layout title="${%New Slide Show}" norefresh="true">
+    <l:layout title="${%Configure Slide Show}" norefresh="true">
         <st:include it="${it.theMainPage}" page="side-panel.jelly"/>
         <l:main-panel>
             <f:form action="configSubmit" method="post" name="configForm">

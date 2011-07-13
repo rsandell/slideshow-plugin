@@ -25,7 +25,7 @@
          xmlns:t="/lib/hudson" xmlns:f="/lib/form" escapeText="true">
     <l:side-panel>
         <l:tasks>
-            <l:task title="${%New Slide Show}" href="${rootUrl}/slideShows/new" icon="images/24x24/new-document.png"/>
+            <l:task title="${%New Slide Show}" href="${rootUrl}/slideShows/new" icon="images/24x24/new-document.png" permission="${it.createPermission}"/>
             <j:forEach items="${it.shows}" var="show">
                 <l:task title="${show.name}" href="${rootUrl}/slideShows/show/${show.name}" icon="images/24x24/document.png"/>
             </j:forEach>

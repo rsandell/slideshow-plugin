@@ -31,10 +31,14 @@
             <a href="${it.viewUrl}" title="${%View}">
                 <img src="${rootUrl}/images/16x16/clock.png" border="0" alt="${%View}"/>
             </a>
-            <a href="${it.configUrl}" title="${%Configure}">
-                <img src="${rootUrl}/images/16x16/document_edit.png" border="0" alt="${%Configure}"/>
-            </a>
-            <img src="${rootUrl}/images/16x16/edit-delete.png" border="0" alt="Delete"/>
+            <l:hasPermission permission="${it.theMainPage.configurePermission}">
+                <a href="${it.configUrl}" title="${%Configure}">
+                    <img src="${rootUrl}/images/16x16/document_edit.png" border="0" alt="${%Configure}"/>
+                </a>
+            </l:hasPermission>
+            <l:hasPermission permission="${it.theMainPage.deletePermission}">
+                <img src="${rootUrl}/images/16x16/edit-delete.png" border="0" alt="Delete"/>
+            </l:hasPermission>
         </th>
     </tr>
     <tr>

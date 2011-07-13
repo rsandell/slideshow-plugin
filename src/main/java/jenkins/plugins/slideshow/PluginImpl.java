@@ -27,6 +27,8 @@ package jenkins.plugins.slideshow;
 import hudson.Extension;
 import hudson.Plugin;
 import hudson.model.Hudson;
+import hudson.security.Permission;
+import hudson.security.PermissionGroup;
 import jenkins.plugins.slideshow.model.Page;
 import jenkins.plugins.slideshow.model.SlideShow;
 import org.kohsuke.stapler.Stapler;
@@ -45,6 +47,13 @@ import java.util.List;
  */
 @Extension
 public class PluginImpl extends Plugin {
+
+    public static final PermissionGroup SLIDESHOWS_PERMISSIONS = new PermissionGroup(PluginImpl.class, Messages._SlideShows());
+
+    public static final Permission LIST = new Permission(PluginImpl.SLIDESHOWS_PERMISSIONS, "List", Messages._ListSlideShows(), Hudson.ADMINISTER);
+    public static final Permission DELETE = new Permission(PluginImpl.SLIDESHOWS_PERMISSIONS, "Delete", Messages._DeleteSlideShows(), Hudson.ADMINISTER);
+    public static final Permission CREATE = new Permission(PluginImpl.SLIDESHOWS_PERMISSIONS, "Create", Messages._CreateSlideShows(), Hudson.ADMINISTER);
+    public static final Permission CONFIGURE = new Permission(PluginImpl.SLIDESHOWS_PERMISSIONS, "Configure", Messages._ConfigureSlideShows(), CREATE);
 
     private List<SlideShow> shows;
 
