@@ -27,6 +27,15 @@ package jenkins.plugins.slideshow;
 import hudson.Extension;
 import hudson.Plugin;
 import hudson.model.Hudson;
+import jenkins.plugins.slideshow.model.Page;
+import jenkins.plugins.slideshow.model.SlideShow;
+import org.kohsuke.stapler.Stapler;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Main Plugin Singleton
@@ -37,9 +46,65 @@ import hudson.model.Hudson;
 @Extension
 public class PluginImpl extends Plugin {
 
+    private List<SlideShow> shows;
+
+    @Override
+    public void start() throws Exception {
+        super.start();
+        load();
+    }
+
     public static PluginImpl getInstance() {
         return Hudson.getInstance().getPlugin(PluginImpl.class);
     }
 
+    @Override
+    public synchronized void save() throws IOException {
+        super.save();
+    }
 
+    public List<SlideShow> getShows() {
+        if(shows == null) {
+            shows = new LinkedList<SlideShow>();
+        }
+        return shows;
+    }
+
+    public void setShows(List<SlideShow> shows) {
+        this.shows = shows;
+    }
+
+    public void addShow(SlideShow show) {
+        getShows().add(show);
+    }
+
+    public static String getRootUrl() {
+        String rootUrl = Hudson.getInstance().getRootUrl();
+        if (rootUrl == null) {
+            rootUrl = Stapler.getCurrentRequest().getRootPath();
+        }
+        if (rootUrl != null && !rootUrl.endsWith("/")) {
+            rootUrl = rootUrl + "/";
+        }
+        return rootUrl;
+    }
+
+    public static String getFromRootUrl(String url) {
+        try {
+            URI u = new URI(url);
+
+            if (u.isAbsolute()) {
+                return url;
+            } else {
+                String rootUrl = getRootUrl();
+                if (rootUrl == null) {
+                    rootUrl = "";
+                }
+                return rootUrl + url;
+            }
+
+        } catch (URISyntaxException e) {
+            return url;
+        }
+    }
 }

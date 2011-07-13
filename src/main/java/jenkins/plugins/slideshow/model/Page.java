@@ -26,7 +26,13 @@ package jenkins.plugins.slideshow.model;
 
 import hudson.model.Describable;
 import hudson.model.Descriptor;
-import jenkins.plugins.slideshow.Messages;
+import hudson.model.Hudson;
+import hudson.util.FormValidation;
+import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.QueryParameter;
+import org.kohsuke.stapler.Stapler;
+
+import java.util.Iterator;
 
 /**
  * Created: 7/10/11 5:29 PM
@@ -36,6 +42,28 @@ import jenkins.plugins.slideshow.Messages;
 public abstract class Page implements Describable<Page> {
 
     private SlideShow parent;
+    private Time overrideTime = null;
+
+    protected Page(Time overrideTime) {
+        this.overrideTime = overrideTime;
+    }
+
+    protected Page() {
+    }
+
+    public boolean isOverrideTime() {
+        return overrideTime != null;
+    }
+
+    public Time getOverrideTime() {
+        return overrideTime;
+    }
+
+    public void setOverrideTime(Time overrideTime) {
+        this.overrideTime = overrideTime;
+    }
+
+    public abstract String getFullDisplayUrl();
 
     public SlideShow getParent() {
         return parent;
@@ -48,11 +76,33 @@ public abstract class Page implements Describable<Page> {
     /**
      * The descriptor of a page.
      */
-    public static class PageDescriptor extends Descriptor<Page> {
+    public abstract static class PageDescriptor extends Descriptor<Page> {
+        public FormValidation doCheckTime(@QueryParameter String value) {
+            return FormValidation.validateNonNegativeInteger(value);
+        }
 
-        @Override
-        public String getDisplayName() {
-            return Messages.Page();
+        public static Iterator<Descriptor<Page>> getAllPageDescriptors() {
+            return Hudson.getInstance().getDescriptorList(Page.class).iterator();
+        }
+    }
+
+    public static class Time {
+        int time = SlideShow.DEFAULT_PAGE_TIME;
+
+        @DataBoundConstructor
+        public Time(int time) {
+            this.time = time;
+        }
+
+        public Time() {
+        }
+
+        public int getTime() {
+            return time;
+        }
+
+        public void setTime(int time) {
+            this.time = time;
         }
     }
 }

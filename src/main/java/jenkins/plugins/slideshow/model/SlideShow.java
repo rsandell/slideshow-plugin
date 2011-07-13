@@ -24,7 +24,17 @@
 
 package jenkins.plugins.slideshow.model;
 
+import jenkins.plugins.slideshow.PluginImpl;
+import jenkins.plugins.slideshow.SlideShows;
+import net.sf.json.JSONObject;
+import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
+
+import javax.management.Descriptor;
+import javax.servlet.ServletException;
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -54,6 +64,12 @@ public class SlideShow implements Serializable {
         this.name = name;
         this.pages = pages;
         this.defaultPageTime = DEFAULT_PAGE_TIME;
+    }
+
+    public SlideShow(String name, int defaultPageTime) {
+        this.name = name;
+        this.defaultPageTime = defaultPageTime;
+        this.pages = new LinkedList<Page>();
     }
 
     /**
@@ -118,5 +134,20 @@ public class SlideShow implements Serializable {
             return null;
         }
         return pages.get(nextIndex);
+    }
+
+    public SlideShows getTheMainPage() {
+        return SlideShows.getInstance();
+    }
+
+    public Iterator<hudson.model.Descriptor<Page>> getPageDescriptors() {
+        return Page.PageDescriptor.getAllPageDescriptors();
+    }
+
+    public void doConfigSubmit(StaplerRequest request, StaplerResponse response) throws ServletException, IOException {
+        //JSONObject form = request.getSubmittedForm();
+        request.bindJSON(this, request.getSubmittedForm());
+        PluginImpl.getInstance().save();
+        response.sendRedirect2(SlideShows.getInstance().getFullUrl());
     }
 }

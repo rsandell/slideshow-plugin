@@ -28,8 +28,16 @@ import hudson.Extension;
 import hudson.model.Action;
 import hudson.model.Hudson;
 import hudson.model.RootAction;
+import hudson.util.FormValidation;
 import jenkins.plugins.slideshow.model.SlideShow;
+import net.sf.json.JSONObject;
+import org.kohsuke.stapler.QueryParameter;
+import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
 
+import javax.servlet.ServletException;
+import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -41,7 +49,7 @@ import java.util.List;
 public class SlideShows implements RootAction {
 
     public static final String URL_NAME = "slideShows";
-    private List<SlideShow> shows;
+
 
     @Override
     public String getIconFileName() {
@@ -59,15 +67,11 @@ public class SlideShows implements RootAction {
     }
 
     public List<SlideShow> getShows() {
-        return shows;
-    }
-
-    public void setShows(List<SlideShow> shows) {
-        this.shows = shows;
+        return PluginImpl.getInstance().getShows();
     }
 
     public SlideShow getShow(String name) {
-        for (SlideShow show : shows) {
+        for (SlideShow show : getShows()) {
             if (name.equalsIgnoreCase(show.getName())) {
                 return show;
             }
@@ -78,10 +82,41 @@ public class SlideShows implements RootAction {
     public static SlideShows getInstance() {
         List<Action> actions = Hudson.getInstance().getActions();
         for (Action a : actions) {
-            if (a instanceof SlideShow) {
+            if (a instanceof SlideShows) {
                 return (SlideShows) a;
             }
         }
         return null;
+    }
+
+    public FormValidation doCheckName(@QueryParameter String value) {
+        if (value == null || value.isEmpty()) {
+            return FormValidation.error("Please specify a name.");
+        } else if (getShow(value) != null) {
+            return FormValidation.error("The name {0} is taken.", value);
+        }
+        return FormValidation.ok();
+    }
+
+    public FormValidation doCheckDefaultPageTime(@QueryParameter String value) {
+        return FormValidation.validateNonNegativeInteger(value);
+    }
+
+    public void doCreateNew(StaplerRequest request, StaplerResponse response) throws ServletException, IOException {
+        JSONObject json = request.getSubmittedForm();
+        String name = json.getString("name");
+        int time = json.getInt("defaultPageTime");
+        SlideShow show = new SlideShow(name, time);
+        PluginImpl.getInstance().addShow(show);
+        PluginImpl.getInstance().save();
+        response.sendRedirect2("show/" + show.getName() + "/configure");
+    }
+
+    public int getDefaultPageTime() {
+        return SlideShow.DEFAULT_PAGE_TIME;
+    }
+
+    public String getFullUrl() {
+        return PluginImpl.getFromRootUrl(getUrlName());
     }
 }
