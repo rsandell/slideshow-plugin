@@ -51,14 +51,15 @@ public class ViewPage extends Page {
 
     /**
      * Standard constructor.
+     *
      * @param overrideTime the display time if it is overridden.
-     * @param view the URL of the view to show.
+     * @param viewUrl         the URL of the view to show.
      * @see Page#Page(jenkins.plugins.slideshow.model.Page.Time)
      */
     @DataBoundConstructor
-    public ViewPage(Time overrideTime, String view) {
+    public ViewPage(Time overrideTime, String viewUrl) {
         super(overrideTime);
-        this.view = findView(view);
+        this.view = findView(viewUrl);
         if (view == null) {
             throw new IllegalArgumentException("No view with url \"" + view + "\" found!");
         }
@@ -89,6 +90,21 @@ public class ViewPage extends Page {
      */
     public ViewPojo getView() {
         return view;
+    }
+
+    /**
+     * The URL to the view to show.
+     * Used for stapler data binding.
+     * @return the URL.
+     * @see jenkins.plugins.slideshow.model.ViewPage.ViewPojo#getViewUrl()
+     */
+    public String getViewUrl() {
+        if (view != null) {
+            return view.getViewUrl();
+        } else {
+            return null;
+        }
+
     }
 
     /**
@@ -132,7 +148,7 @@ public class ViewPage extends Page {
          *
          * @return all available views.
          */
-        public ListBoxModel doFillViewItems() {
+        public ListBoxModel doFillViewUrlItems() {
             ListBoxModel model = new ListBoxModel();
             List<ViewPojo> views = getViews();
             for (ViewPojo v : views) {
@@ -231,6 +247,7 @@ public class ViewPage extends Page {
         public int compareTo(ViewPojo viewPojo) {
             return fullName.compareTo(viewPojo.getFullName());
         }
+
 
         //CS IGNORE InlineConditionals FOR NEXT 12 LINES. REASON: Auto generated code.
         //CS IGNORE NeedBraces FOR NEXT 12 LINES. REASON: Auto generated code.
