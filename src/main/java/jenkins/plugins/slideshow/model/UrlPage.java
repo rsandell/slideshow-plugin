@@ -37,6 +37,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
+ * A page that shows an arbitrary URL.
  * Created: 7/11/11 3:13 PM
  *
  * @author Robert Sandell &lt;sandell.robert@gmail.com&gt;
@@ -45,12 +46,22 @@ public class UrlPage extends Page {
 
     private String url;
 
+    /**
+     * Standard constructor.
+     *
+     * @param overrideTime if this pages should be displayed for a different time than other pages.
+     * @param url          the URL itself.
+     */
     @DataBoundConstructor
     public UrlPage(Time overrideTime, String url) {
         super(overrideTime);
         this.url = url;
     }
 
+    /**
+     * Default constructor.
+     * <strong>Do not use unless you are a serializer.</strong>
+     */
     public UrlPage() {
     }
 
@@ -59,6 +70,11 @@ public class UrlPage extends Page {
         return Hudson.getInstance().getDescriptorByType(UrlPageDescriptor.class);
     }
 
+    /**
+     * The Descriptor for UrlPage.
+     *
+     * @see PageDescriptor
+     */
     @Extension
     public static class UrlPageDescriptor extends PageDescriptor {
         @Override
@@ -66,8 +82,16 @@ public class UrlPage extends Page {
             return Messages.UrlPage();
         }
 
+        /**
+         * Performs a FormValidation on the url value.
+         * Validates != null, not empty and that {@link URI#URI(String)} doesn't throw an exception.
+         * Called from Jelly.
+         *
+         * @param value the value to check.
+         * @return {@link hudson.util.FormValidation#ok()} if so.
+         */
         public FormValidation doCheckUrl(@QueryParameter String value) {
-            if(value == null || value.isEmpty()) {
+            if (value == null || value.isEmpty()) {
                 return FormValidation.error("Please provide a value.");
             } else {
                 try {
@@ -80,10 +104,22 @@ public class UrlPage extends Page {
         }
     }
 
+    /**
+     * The URL to display.
+     * If it is relative it will be relative to the slide show itself.
+     *
+     * @return the URL
+     */
     public String getUrl() {
         return url;
     }
 
+    /**
+     * The URL to display.
+     * If it is relative it will be relative to the slide show itself.
+     *
+     * @param url the url.
+     */
     public void setUrl(String url) {
         this.url = url;
     }
