@@ -61,7 +61,7 @@ public class ViewPage extends Page {
         super(overrideTime);
         this.view = findView(viewUrl);
         if (view == null) {
-            throw new IllegalArgumentException("No view with url \"" + view + "\" found!");
+            throw new IllegalArgumentException("No view with url \"" + viewUrl + "\" found!");
         }
     }
 
