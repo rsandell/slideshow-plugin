@@ -118,6 +118,20 @@ public abstract class Page implements Describable<Page> {
     public abstract String getFullDisplayUrl();
 
     /**
+     * Returns the url of this page.
+     * It will first check if {@link #getFullDisplayUrl()} returns something, if nothing is returned
+     * the relative page/indexOf(this) will be returned.
+     * @return the url for this page.
+     */
+    public String getDisplayUrl() {
+        String url = getFullDisplayUrl();
+        if (url == null) {
+            url = "page/" + parent.getIndexOf(this);
+        }
+        return url;
+    }
+
+    /**
      * The {@link SlideShow} that this page belongs to.
      *
      * @return the parent.

@@ -228,7 +228,7 @@ public class SlideShow implements Serializable {
             return null;
         }
         Page page = pages.get(nextIndex);
-        return new PagePojo(page.getFullDisplayUrl(), nextIndex, page.getSpecifiedTime());
+        return new PagePojo(page.getDisplayUrl(), nextIndex, page.getSpecifiedTime());
     }
 
     /**
@@ -243,7 +243,7 @@ public class SlideShow implements Serializable {
             return null;
         }
         Page page = pages.get(0);
-        return new PagePojo(page.getFullDisplayUrl(), 0, page.getSpecifiedTime());
+        return new PagePojo(page.getDisplayUrl(), 0, page.getSpecifiedTime());
     }
 
     /**
