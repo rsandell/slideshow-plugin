@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>slideshow</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.7-SNAPSHOT</version> <!-- < 1.0 indicates not completely done yet -->
     <packaging>hpi</packaging>
     <name>Slideshow Plugin</name>
     <description>Jenkins plugin for displaying various pages on for example a big screen one after another.</description>

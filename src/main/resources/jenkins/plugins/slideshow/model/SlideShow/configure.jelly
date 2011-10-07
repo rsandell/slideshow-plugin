@@ -38,6 +38,18 @@
                         <f:textbox value="${it.defaultPageTime}"
                                    checkUrl="'${rootURL}/slideShows/checkDefaultPageTime?value='+this.value"/>
                     </f:entry>
+                    <f:entry title="${%Hide Jenkins Header}" field="hideHeader"
+                            description="${%If the slide show should hide the Jenkins header when showing an internal page.}">
+                        <f:checkbox checked="${it.hideHeader}"/>
+                    </f:entry>
+                    <f:entry title="${%Hide Jenkins Side Panel}" field="hideSidePanel"
+                            description="${%If the slide show should hide the Jenkins side-panel when showing an internal page.}">
+                        <f:checkbox checked="${it.hideSidePanel}"/>
+                    </f:entry>
+                    <f:entry title="${%Hide Jenkins Footer}" field="hideFooter"
+                            description="${%If the slide show should hide the Jenkins footer when showing an internal page.}">
+                        <f:checkbox checked="${it.hideFooter}"/>
+                    </f:entry>
                 </f:section>
                 <f:section title="${%Pages}">
                     <f:entry title="" field="pages">

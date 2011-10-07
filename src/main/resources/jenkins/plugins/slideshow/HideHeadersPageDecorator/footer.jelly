@@ -24,5 +24,27 @@
 
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
          xmlns:t="/lib/hudson" xmlns:f="/lib/form" escapeText="true">
-
+    <j:set value="${it.getSlideShow()}" var="slideShow"/>
+    <j:if test="${slideShow != null}">
+        <script language="JavaScript">
+            <j:if test="${slideShow.hideHeader}">
+                var header = document.getElementById("header");
+                if (header != null) {
+                header.style.display="none";
+                }
+            </j:if>
+            <j:if test="${slideShow.hideSidePanel}">
+                var sidePanel = document.getElementById("side-panel");
+                if (sidePanel != null) {
+                sidePanel.style.display="none";
+                }
+            </j:if>
+            <j:if test="${slideShow.hideFooter}">
+                var footer = document.getElementById("footer");
+                if (footer != null) {
+                footer.style.display="none";
+                }
+            </j:if>
+        </script>
+    </j:if>
 </j:jelly>

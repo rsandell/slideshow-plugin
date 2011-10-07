@@ -55,6 +55,30 @@ public class SlideShow implements Serializable {
     private String name;
     private int defaultPageTime;
     private List<Page> pages;
+    private boolean hideHeader;
+    private boolean hideSidePanel;
+    private boolean hideFooter;
+
+    /**
+     * Standard Constructor.
+     *
+     * @param name            a unique name
+     * @param defaultPageTime How long each page should be shown by default
+     * @param pages           list of pages.
+     * @param hideHeader      If the slide show should hide the Jenkins header when showing an internal page.
+     * @param hideSidePanel   If the slide show should hide the Jenkins side-panel when showing an internal page.
+     * @param hideFooter      If the slide show should hide the Jenkins footer when showing an internal page.
+     */
+    public SlideShow(String name, int defaultPageTime,
+                     boolean hideHeader, boolean hideSidePanel, boolean hideFooter,
+                     List<Page> pages) {
+        this.name = name;
+        this.defaultPageTime = defaultPageTime;
+        this.pages = pages;
+        this.hideHeader = hideHeader;
+        this.hideSidePanel = hideSidePanel;
+        this.hideFooter = hideFooter;
+    }
 
     /**
      * Standard Constructor.
@@ -143,6 +167,60 @@ public class SlideShow implements Serializable {
      */
     public List<Page> getPages() {
         return pages;
+    }
+
+    /**
+     * If the slide show should hide the Jenkins header when showing an internal page.
+     *
+     * @return true if so.
+     */
+    public boolean isHideHeader() {
+        return hideHeader;
+    }
+
+    /**
+     * If the slide show should hide the Jenkins header when showing an internal page.
+     *
+     * @param hideHeader true if so.
+     */
+    public void setHideHeader(boolean hideHeader) {
+        this.hideHeader = hideHeader;
+    }
+
+    /**
+     * If the slide show should hide the Jenkins side-panel when showing an internal page.
+     *
+     * @return true if so.
+     */
+    public boolean isHideSidePanel() {
+        return hideSidePanel;
+    }
+
+    /**
+     * If the slide show should hide the Jenkins side-panel when showing an internal page.
+     *
+     * @param hideSidePanel true if so.
+     */
+    public void setHideSidePanel(boolean hideSidePanel) {
+        this.hideSidePanel = hideSidePanel;
+    }
+
+    /**
+     * If the slide show should hide the Jenkins footer when showing an internal page.
+     *
+     * @return true if so.
+     */
+    public boolean isHideFooter() {
+        return hideFooter;
+    }
+
+    /**
+     * If the slide show should hide the Jenkins footer when showing an internal page.
+     *
+     * @param hideFooter true if so.
+     */
+    public void setHideFooter(boolean hideFooter) {
+        this.hideFooter = hideFooter;
     }
 
     /**

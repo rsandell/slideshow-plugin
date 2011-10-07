@@ -42,8 +42,29 @@
         </th>
     </tr>
     <tr>
-        <th style="font-size: 9; white-space: nowrap" width="60" nowrap="true">${%Default Page Time}</th>
+        <th style="font-size: 9; white-space: nowrap" width="60" nowrap="true" align="left">
+            ${%Default Page Time}
+        </th>
         <td style="font-size: 9;" colspan="2" align="left">${it.defaultPageTime}</td>
+    </tr>
+    <tr>
+        <th style="font-size: 9; white-space: nowrap" width="60" nowrap="true" align="left">
+            ${%Hide}
+        </th>
+        <td style="font-size: 9;" colspan="2" align="left">
+            <j:if test="${it.hideHeader}">
+                ${%header}<st:nbsp/>
+            </j:if>
+            <j:if test="${it.hideSidePanel}">
+                ${%side-panel}<st:nbsp/>
+            </j:if>
+            <j:if test="${it.hideFooter}">
+                ${%footer}
+            </j:if>
+            <j:if test="${!it.hideHeader and !it.hideSidePanel and !it.hideFooter}">
+                ${%none}
+            </j:if>
+        </td>
     </tr>
     <tr class="disablehover">
         <td colspan="3">
